@@ -29,7 +29,7 @@ posts = {
         "link": "https://i.imgur.com/TJ46wX4.jpg",
         "username": "alicia98",
         "comments": {
-            0: {
+            1: {
                 "id": 1,
                 "upvotes": 5,
                 "text": "what a cute puppy aww",
@@ -45,7 +45,6 @@ comments_counter = 2
 @app.route("/")
 def hello_world():
     return "Hello world!"
-
 
 # your routes here
 @app.route("/api/posts/")
@@ -122,12 +121,14 @@ def createComment(post_id):
 @app.route("/api/posts/<int:post_id>/comments/<int:com_id>/", methods=["POST"])
 def editComment(post_id, com_id):
     post = posts.get(post_id)
+    postComment = post.get("comments")
+    newComment = postComment.get(com_id)
     
-
     body = json.loads(request.data)
-    
+    text = body.get("text");
+    newComment["text"] = text
 
-    return json.dumps(comment)
+    return json.dumps(newComment), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

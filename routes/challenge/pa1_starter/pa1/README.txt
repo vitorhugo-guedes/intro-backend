@@ -1,4 +1,4 @@
-Name:
+Name: Vitor Hugo
 NetID:
 
 Challenges Attempted: (Tier I, Tier II, Tier III)
