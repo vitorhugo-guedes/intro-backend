@@ -128,7 +128,7 @@ def editComment(post_id, com_id):
     text = body.get("text");
     newComment["text"] = text
 
-    return json.dumps(newComment), 200
+    return json.dumps(newComment), 400
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
