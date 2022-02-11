@@ -1,7 +1,7 @@
 Name: Vitor Hugo
 NetID:
 
-Challenges Attempted: (Tier I, Tier II, Tier III)
+Challenges Attempted: Tier I
 
-Difficulties:
+Difficulties: Work with diccionaries
 Comments:

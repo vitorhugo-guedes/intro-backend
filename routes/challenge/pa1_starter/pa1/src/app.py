@@ -69,8 +69,8 @@ def createPost():
         return json.dumps({"error": "Posts need to have a username!"}), 400
 
     post = {"id": posts_counter, "upvotes": 1, "title": title, "link": link, "username": username}
-    posts_counter += 1
     posts[posts_counter] = post
+    posts_counter += 1
 
     return json.dumps(post), 201
     
@@ -98,8 +98,14 @@ def deletePost(post_id):
 def getPostComments(post_id):
     post = posts.get(post_id)
     allComments = post.get("comments")
-    res = list(allComments.values())
 
+    if not post:
+        return json.dumps({"error": "Post not found"}), 404
+    if not allComments:
+        return json.dumps({"error": "This post has no comments"}), 404
+
+    res = list(allComments.values())
+    
     return json.dumps(res), 200
 
 @app.route("/api/posts/<int:post_id>/comments/", methods=["POST"])
@@ -107,28 +113,45 @@ def createComment(post_id):
     global comments_counter
     
     post = posts.get(post_id)
+    if not post:
+        return json.dumps({"error": "Post not found"}), 404
 
     body = json.loads(request.data)
     text = body.get("text")
     user = body.get("username")
+    
+    if not text:
+        return json.dumps({"error": "Comment need to have a text"}), 400
+    if not user:
+        return json.dumps({"error": "Comment need to have a username"}), 400
 
     comment = {"id": comments_counter, "upvotes": 1, "text": text, "username": user}
-    comments_counter += 1
     post["comments"][comments_counter] = comment
+    comments_counter += 1
 
     return json.dumps(comment), 201
 
 @app.route("/api/posts/<int:post_id>/comments/<int:com_id>/", methods=["POST"])
 def editComment(post_id, com_id):
     post = posts.get(post_id)
-    postComment = post.get("comments")
-    newComment = postComment.get(com_id)
+    
+    if not post:
+        return json.dumps({"error": "Post not found"}), 404
+
+    postComments = post.get("comments")
+    comment = postComments.get(com_id)
+    
+    if not comment:
+        return json.dumps({"error": "Comment not found"}), 404
     
     body = json.loads(request.data)
-    text = body.get("text");
-    newComment["text"] = text
+    text = body.get("text")
+    comment["text"] = text
 
-    return json.dumps(newComment), 400
+    if not text:
+        return json.dumps({"error": "Edit needs a text"}), 400
+
+    return json.dumps(comment), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
